@@ -1,0 +1,32 @@
+name: CI-workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    services:
+      splunk:
+        image: splunk/splunk:latest
+        env:
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_DISABLE_POPUPS: true
+          SPLUNK_PASSWORD: 'Chang3d!'
+        options: >-
+          --health-interval 30s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 8000:8000
+          - 8089:8089
+    permissions:
+      actions: read
+      deployments: read
+      contents: read
+      packages: read
+      statuses: read
+      checks: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
